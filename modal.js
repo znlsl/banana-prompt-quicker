@@ -1,7 +1,3 @@
-/**
- * BananaModal - 通用的 Prompt 选择模态窗
- * 负责 UI 渲染、搜索过滤、收藏管理
- */
 class BananaModal {
     constructor(adapter) {
         this.adapter = adapter
@@ -22,7 +18,6 @@ class BananaModal {
             staticPrompts = await window.PromptManager.get()
         }
         this.customPrompts = await this.getCustomPrompts()
-        // 合并静态 Prompt 和自定义 Prompt，自定义的排在前面
         this.prompts = [...this.customPrompts, ...staticPrompts]
         this.applyFilters()
     }
@@ -57,10 +52,10 @@ class BananaModal {
 
         const modalElement = document.createElement('div')
         modalElement.id = 'prompts-modal'
-        modalElement.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000;'
+        modalElement.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 1000;'
 
         const container = document.createElement('div')
-        container.style.cssText = `background: ${colors.background}; border-radius: ${mobile ? '12px 12px 0 0' : '8px'}; box-shadow: 0 8px 32px ${colors.shadow}; max-width: ${mobile ? '100%' : '900px'}; width: ${mobile ? '100%' : '90%'}; max-height: ${mobile ? '90vh' : '85vh'}; display: flex; flex-direction: column; ${mobile ? 'margin-top: auto;' : ''}`
+        container.style.cssText = `background: ${colors.background}; border-radius: ${mobile ? '24px 24px 0 0' : '20px'}; box-shadow: 0 20px 60px ${colors.shadow}; max-width: ${mobile ? '100%' : '900px'}; width: ${mobile ? '100%' : '90%'}; max-height: ${mobile ? '90vh' : '85vh'}; display: flex; flex-direction: column; ${mobile ? 'margin-top: auto;' : ''}`
         container.onclick = (e) => e.stopPropagation()
 
         const searchSection = this.createSearchSection(colors, mobile)
@@ -91,7 +86,7 @@ class BananaModal {
         searchInput.type = 'text'
         searchInput.id = 'prompt-search'
         searchInput.placeholder = '搜索...'
-        searchInput.style.cssText = `${mobile ? 'width: 100%;' : 'flex: 1;'} padding: ${mobile ? '12px 16px' : '10px 16px'}; border: 1px solid ${colors.inputBorder}; border-radius: 12px; outline: none; font-size: ${mobile ? '16px' : '14px'}; background: ${colors.inputBg}; color: ${colors.text}; box-sizing: border-box;`
+        searchInput.style.cssText = `${mobile ? 'width: 100%;' : 'flex: 1;'} padding: ${mobile ? '14px 20px' : '12px 18px'}; border: 1px solid ${colors.inputBorder}; border-radius: 16px; outline: none; font-size: ${mobile ? '16px' : '14px'}; background: ${colors.inputBg}; color: ${colors.text}; box-sizing: border-box; transition: all 0.2s;`
         searchInput.addEventListener('input', () => this.applyFilters())
 
         searchInput.addEventListener('focus', () => {
@@ -116,7 +111,7 @@ class BananaModal {
             const btn = document.createElement('button')
             btn.id = `filter-${filter.key}`
             btn.textContent = filter.label
-            btn.style.cssText = `padding: ${mobile ? '10px 16px' : '8px 16px'}; border: 1px solid ${colors.border}; border-radius: 16px; background: ${colors.surface}; color: ${colors.text}; font-size: ${mobile ? '14px' : '13px'}; cursor: pointer; transition: all 0.2s; white-space: nowrap; touch-action: manipulation;`
+            btn.style.cssText = `padding: ${mobile ? '10px 18px' : '8px 18px'}; border: 1px solid ${colors.border}; border-radius: 20px; background: ${colors.surface}; color: ${colors.text}; font-size: ${mobile ? '14px' : '13px'}; cursor: pointer; transition: all 0.25s ease; white-space: nowrap; touch-action: manipulation;`
             btn.onclick = () => this.toggleFilter(filter.key)
             filterContainer.appendChild(btn)
         })
@@ -124,7 +119,7 @@ class BananaModal {
         const addBtn = document.createElement('button')
         addBtn.textContent = '+'
         addBtn.title = '添加自定义 Prompt'
-        addBtn.style.cssText = `padding: ${mobile ? '10px 16px' : '8px 16px'}; border: 1px solid ${colors.primary}; border-radius: 16px; background: ${colors.primary}; color: white; font-size: ${mobile ? '18px' : '16px'}; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; line-height: 1;`
+        addBtn.style.cssText = `padding: ${mobile ? '10px 18px' : '8px 18px'}; border: 1px solid ${colors.primary}; border-radius: 20px; background: ${colors.primary}; color: white; font-size: ${mobile ? '18px' : '16px'}; font-weight: 600; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; line-height: 1; box-shadow: 0 2px 8px ${colors.shadow};`
         addBtn.onclick = () => this.showAddPromptModal()
 
         filterContainer.appendChild(addBtn)
@@ -167,7 +162,18 @@ class BananaModal {
         const mobile = this.isMobile()
 
         const setInactiveStyle = (targetBtn) => {
-            targetBtn.style.cssText = `padding: ${mobile ? '10px 16px' : '8px 16px'}; border: 1px solid ${colors.border}; border-radius: 16px; background: ${colors.surface}; color: ${colors.text}; font-size: ${mobile ? '14px' : '13px'}; cursor: pointer; transition: all 0.2s; white-space: nowrap; touch-action: manipulation;`
+            targetBtn.style.cssText = `padding: ${mobile ? '10px 18px' : '8px 18px'}; border: 1px solid ${colors.border}; border-radius: 20px; background: ${colors.surface}; color: ${colors.text}; font-size: ${mobile ? '14px' : '13px'}; cursor: pointer; transition: all 0.25s ease; white-space: nowrap; touch-action: manipulation;`
+
+            if (!mobile) {
+                targetBtn.onmouseenter = () => {
+                    targetBtn.style.transform = 'scale(1.05)'
+                    targetBtn.style.boxShadow = `0 2px 8px ${colors.shadow}`
+                }
+                targetBtn.onmouseleave = () => {
+                    targetBtn.style.transform = 'scale(1)'
+                    targetBtn.style.boxShadow = 'none'
+                }
+            }
         }
 
         if (this.activeFilters.has(filterKey)) {
@@ -187,7 +193,18 @@ class BananaModal {
             }
 
             this.activeFilters.add(filterKey)
-            btn.style.cssText = `padding: ${mobile ? '10px 16px' : '8px 16px'}; border: 1px solid ${colors.primary}; border-radius: 16px; background: ${colors.primary}; color: white; font-size: ${mobile ? '14px' : '13px'}; cursor: pointer; transition: all 0.2s; white-space: nowrap; touch-action: manipulation;`
+            btn.style.cssText = `padding: ${mobile ? '10px 18px' : '8px 18px'}; border: 1px solid ${colors.primary}; border-radius: 20px; background: ${colors.primary}; color: white; font-size: ${mobile ? '14px' : '13px'}; cursor: pointer; transition: all 0.25s ease; white-space: nowrap; touch-action: manipulation; box-shadow: 0 2px 8px ${colors.shadow};`
+
+            if (!mobile) {
+                btn.onmouseenter = () => {
+                    btn.style.transform = 'scale(1.05)'
+                    btn.style.boxShadow = `0 4px 12px ${colors.shadow}`
+                }
+                btn.onmouseleave = () => {
+                    btn.style.transform = 'scale(1)'
+                    btn.style.boxShadow = `0 2px 8px ${colors.shadow}`
+                }
+            }
         }
 
         this.applyFilters()
@@ -284,8 +301,20 @@ class BananaModal {
             const btn = document.createElement('button')
             btn.textContent = text
             btn.disabled = disabled
-            btn.style.cssText = `padding: ${mobile ? '8px 16px' : '6px 16px'}; border: 1px solid ${colors.border}; border-radius: 8px; background: ${disabled ? colors.surface : colors.primary}; color: ${disabled ? colors.textSecondary : '#fff'}; cursor: ${disabled ? 'not-allowed' : 'pointer'}; font-size: ${mobile ? '14px' : '13px'}; transition: all 0.2s; opacity: ${disabled ? 0.5 : 1};`
-            if (!disabled) btn.onclick = onClick
+            btn.style.cssText = `padding: ${mobile ? '10px 20px' : '8px 18px'}; border: 1px solid ${colors.border}; border-radius: 12px; background: ${disabled ? colors.surface : colors.primary}; color: ${disabled ? colors.textSecondary : '#fff'}; cursor: ${disabled ? 'not-allowed' : 'pointer'}; font-size: ${mobile ? '14px' : '13px'}; transition: all 0.25s ease; opacity: ${disabled ? 0.5 : 1}; font-weight: 500;`
+            if (!disabled) {
+                btn.onclick = onClick
+                if (!mobile) {
+                    btn.onmouseenter = () => {
+                        btn.style.transform = 'scale(1.05)'
+                        btn.style.boxShadow = `0 4px 12px ${colors.shadow}`
+                    }
+                    btn.onmouseleave = () => {
+                        btn.style.transform = 'scale(1)'
+                        btn.style.boxShadow = 'none'
+                    }
+                }
+            }
             return btn
         }
 
@@ -301,12 +330,14 @@ class BananaModal {
         starLink.href = 'https://github.com/glidea/banana-prompt-quicker'
         starLink.target = '_blank'
         starLink.textContent = mobile ? '⭐' : '⭐ Star 项目或贡献 Prompt'
-        starLink.style.cssText = `padding: ${mobile ? '8px 12px' : '6px 16px'}; border: 1px solid ${colors.border}; border-radius: 8px; background: ${colors.surface}; color: ${colors.text}; text-decoration: none; font-size: ${mobile ? '14px' : '13px'}; transition: all 0.2s; display: flex; align-items: center; gap: 4px; margin-left: ${mobile ? '8px' : '16px'};`
+        starLink.style.cssText = `padding: ${mobile ? '10px 14px' : '8px 18px'}; border: 1px solid ${colors.border}; border-radius: 12px; background: ${colors.surface}; color: ${colors.text}; text-decoration: none; font-size: ${mobile ? '14px' : '13px'}; transition: all 0.25s ease; display: flex; align-items: center; gap: 4px; margin-left: ${mobile ? '8px' : '16px'}; font-weight: 500;`
         starLink.onmouseenter = () => {
             if (!mobile) {
                 starLink.style.background = colors.primary
                 starLink.style.color = '#fff'
                 starLink.style.borderColor = colors.primary
+                starLink.style.transform = 'scale(1.05)'
+                starLink.style.boxShadow = `0 4px 12px ${colors.shadow}`
             }
         }
         starLink.onmouseleave = () => {
@@ -314,6 +345,8 @@ class BananaModal {
                 starLink.style.background = colors.surface
                 starLink.style.color = colors.text
                 starLink.style.borderColor = colors.border
+                starLink.style.transform = 'scale(1)'
+                starLink.style.boxShadow = 'none'
             }
         }
 
@@ -337,19 +370,25 @@ class BananaModal {
 
         const card = document.createElement('div')
         card.className = 'prompt-card'
-        card.style.cssText = `background: ${colors.surface}; border-radius: 8px; border: 1px solid ${colors.border}; cursor: pointer; overflow: hidden; transition: box-shadow 0.2s; aspect-ratio: 4/5; position: relative; touch-action: manipulation;`
+        card.style.cssText = `background: ${colors.surface}; border-radius: 16px; border: 1px solid ${colors.border}; cursor: pointer; overflow: hidden; transition: all 0.3s ease; min-height: ${mobile ? '240px' : '260px'}; position: relative; touch-action: manipulation; display: flex; flex-direction: column;`
 
         card.addEventListener('mouseenter', () => {
-            if (!mobile) card.style.boxShadow = `0 2px 8px ${colors.shadow}`
+            if (!mobile) {
+                card.style.boxShadow = `0 8px 24px ${colors.shadow}`
+                card.style.transform = 'translateY(-4px)'
+            }
         })
         card.addEventListener('mouseleave', () => {
-            if (!mobile) card.style.boxShadow = 'none'
+            if (!mobile) {
+                card.style.boxShadow = 'none'
+                card.style.transform = 'translateY(0)'
+            }
         })
 
         const img = document.createElement('img')
         img.src = prompt.preview
         img.alt = prompt.title
-        img.style.cssText = 'width: 100%; height: 65%; object-fit: cover;'
+        img.style.cssText = `width: 100%; height: ${mobile ? '180px' : '200px'}; object-fit: cover; flex-shrink: 0;`
         img.onclick = () => this.adapter.insertPrompt(prompt.prompt)
 
         const favoriteBtn = document.createElement('button')
@@ -364,7 +403,7 @@ class BananaModal {
                 ? '#e8eaed'
                 : '#5f6368'
 
-        favoriteBtn.style.cssText = `position: absolute; top: 8px; right: 8px; width: ${mobile ? '32px' : '28px'}; height: ${mobile ? '32px' : '28px'}; border-radius: 50%; border: none; background: ${favBtnBg}; color: ${favBtnColor}; font-size: ${mobile ? '16px' : '14px'}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); touch-action: manipulation;`
+        favoriteBtn.style.cssText = `position: absolute; top: 12px; right: 12px; width: ${mobile ? '36px' : '32px'}; height: ${mobile ? '36px' : '32px'}; border-radius: 50%; border: none; background: ${favBtnBg}; color: ${favBtnColor}; font-size: ${mobile ? '16px' : '14px'}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.15); backdrop-filter: blur(10px); touch-action: manipulation;`
         favoriteBtn.textContent = isFavorite ? '⭐' : '☆'
         favoriteBtn.onclick = (e) => {
             e.stopPropagation()
@@ -373,15 +412,17 @@ class BananaModal {
 
         if (!mobile) {
             favoriteBtn.addEventListener('mouseenter', () => {
-                favoriteBtn.style.transform = 'scale(1.1)'
+                favoriteBtn.style.transform = 'scale(1.15)'
+                favoriteBtn.style.boxShadow = '0 6px 16px rgba(0,0,0,0.25)'
             })
             favoriteBtn.addEventListener('mouseleave', () => {
                 favoriteBtn.style.transform = 'scale(1)'
+                favoriteBtn.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'
             })
         }
 
         const content = document.createElement('div')
-        content.style.cssText = 'padding: 12px; height: 35%; display: flex; flex-direction: column; justify-content: space-between;'
+        content.style.cssText = 'padding: 12px; flex: 1; display: flex; flex-direction: column; gap: 8px; justify-content: flex-start; min-height: 0; overflow: hidden;'
 
         const title = document.createElement('h3')
         title.style.cssText = `font-size: ${mobile ? '15px' : '14px'}; font-weight: 500; color: ${colors.text}; margin: 0; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;`
@@ -389,7 +430,7 @@ class BananaModal {
         title.onclick = () => this.adapter.insertPrompt(prompt.prompt)
 
         const bottomRow = document.createElement('div')
-        bottomRow.style.cssText = 'display: flex; justify-content: space-between; align-items: center;'
+        bottomRow.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-top: 4px;'
 
         const author = document.createElement('span')
         author.style.cssText = `font-size: ${mobile ? '13px' : '12px'}; color: ${colors.textSecondary}; font-weight: 400;`
@@ -407,8 +448,15 @@ class BananaModal {
         }
 
         const modeTag = document.createElement('span')
-        modeTag.style.cssText = `background: ${prompt.mode === 'edit' ? '#e8f0fe' : '#e6f4ea'}; color: ${prompt.mode === 'edit' ? '#1967d2' : '#137333'}; padding: 4px 8px; border-radius: 12px; font-size: ${mobile ? '12px' : '11px'}; font-weight: 500;`
-        modeTag.textContent = prompt.mode === 'edit' ? '编辑' : '生图'
+        const isEdit = prompt.mode === 'edit'
+        const tagBg = theme === 'dark'
+            ? (isEdit ? 'rgba(10, 132, 255, 0.15)' : 'rgba(48, 209, 88, 0.15)')
+            : (isEdit ? 'rgba(0, 122, 255, 0.12)' : 'rgba(52, 199, 89, 0.12)')
+        const tagColor = theme === 'dark'
+            ? (isEdit ? '#0a84ff' : '#30d158')
+            : (isEdit ? '#007aff' : '#34c759')
+        modeTag.style.cssText = `background: ${tagBg}; color: ${tagColor}; padding: 4px 10px; border-radius: 12px; font-size: ${mobile ? '12px' : '11px'}; font-weight: 600; backdrop-filter: blur(10px);`
+        modeTag.textContent = isEdit ? '编辑' : '生图'
 
         bottomRow.appendChild(author)
         bottomRow.appendChild(modeTag)
@@ -418,7 +466,7 @@ class BananaModal {
             const deleteBtn = document.createElement('button')
             deleteBtn.textContent = '×'
             deleteBtn.title = '删除'
-            deleteBtn.style.cssText = `position: absolute; top: 8px; left: 8px; width: ${mobile ? '32px' : '28px'}; height: ${mobile ? '32px' : '28px'}; border-radius: 50%; border: none; background: rgba(0,0,0,0.5); color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 2; line-height: 1; padding-bottom: 2px;`
+            deleteBtn.style.cssText = `position: absolute; top: 12px; left: 12px; width: ${mobile ? '36px' : '32px'}; height: ${mobile ? '36px' : '32px'}; border-radius: 50%; border: none; background: rgba(0,0,0,0.7); color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s ease; z-index: 2; line-height: 1; padding-bottom: 2px; backdrop-filter: blur(10px); box-shadow: 0 4px 12px rgba(0,0,0,0.15);`
 
             deleteBtn.onclick = (e) => {
                 e.stopPropagation()
@@ -467,19 +515,25 @@ class BananaModal {
         }
 
         const dialog = document.createElement('div')
-        dialog.style.cssText = `background: ${colors.surface}; padding: 24px; border-radius: 12px; width: ${mobile ? '90%' : '500px'}; max-width: 90%; box-shadow: 0 4px 24px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 16px; color: ${colors.text};`
+        dialog.style.cssText = `background: ${colors.surface}; padding: ${mobile ? '28px' : '32px'}; border-radius: 20px; width: ${mobile ? '90%' : '500px'}; max-width: 90%; box-shadow: 0 20px 60px ${colors.shadow}; display: flex; flex-direction: column; gap: 20px; color: ${colors.text};`
         dialog.onclick = (e) => e.stopPropagation()
 
         const title = document.createElement('h3')
         title.textContent = '添加自定义 Prompt'
-        title.style.margin = '0 0 8px 0'
+        title.style.cssText = 'margin: 0 0 8px 0; font-size: 20px; font-weight: 600;'
 
         const createInput = (placeholder, isTextarea = false) => {
             const input = document.createElement(isTextarea ? 'textarea' : 'input')
             input.placeholder = placeholder
-            input.style.cssText = `width: 100%; padding: 12px; border: 1px solid ${colors.inputBorder}; border-radius: 8px; background: ${colors.inputBg}; color: ${colors.text}; font-size: 14px; outline: none; box-sizing: border-box; ${isTextarea ? 'min-height: 100px; resize: vertical;' : ''}`
-            input.onfocus = () => input.style.borderColor = colors.primary
-            input.onblur = () => input.style.borderColor = colors.inputBorder
+            input.style.cssText = `width: 100%; padding: ${mobile ? '14px 16px' : '12px 16px'}; border: 1px solid ${colors.inputBorder}; border-radius: 12px; background: ${colors.inputBg}; color: ${colors.text}; font-size: 14px; outline: none; box-sizing: border-box; transition: all 0.2s; ${isTextarea ? 'min-height: 120px; resize: vertical; font-family: inherit;' : ''}`
+            input.onfocus = () => {
+                input.style.borderColor = colors.primary
+                input.style.boxShadow = `0 0 0 3px ${colors.primary}15`
+            }
+            input.onblur = () => {
+                input.style.borderColor = colors.inputBorder
+                input.style.boxShadow = 'none'
+            }
             return input
         }
 
@@ -515,12 +569,23 @@ class BananaModal {
 
         const cancelBtn = document.createElement('button')
         cancelBtn.textContent = '取消'
-        cancelBtn.style.cssText = `padding: 8px 16px; border: 1px solid ${colors.border}; border-radius: 6px; background: transparent; color: ${colors.text}; cursor: pointer;`
+        cancelBtn.style.cssText = `padding: ${mobile ? '12px 24px' : '10px 20px'}; border: 1px solid ${colors.border}; border-radius: 12px; background: transparent; color: ${colors.text}; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.25s ease;`
         cancelBtn.onclick = () => document.body.removeChild(overlay)
+
+        if (!mobile) {
+            cancelBtn.onmouseenter = () => {
+                cancelBtn.style.background = colors.hover
+                cancelBtn.style.transform = 'scale(1.05)'
+            }
+            cancelBtn.onmouseleave = () => {
+                cancelBtn.style.background = 'transparent'
+                cancelBtn.style.transform = 'scale(1)'
+            }
+        }
 
         const saveBtn = document.createElement('button')
         saveBtn.textContent = '保存'
-        saveBtn.style.cssText = `padding: 8px 16px; border: none; border-radius: 6px; background: ${colors.primary}; color: white; cursor: pointer;`
+        saveBtn.style.cssText = `padding: ${mobile ? '12px 24px' : '10px 20px'}; border: none; border-radius: 12px; background: ${colors.primary}; color: white; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.25s ease; box-shadow: 0 2px 8px ${colors.shadow};`
         saveBtn.onclick = async () => {
             const titleVal = titleInput.value.trim()
             const promptVal = promptInput.value.trim()
@@ -536,6 +601,17 @@ class BananaModal {
                 mode: selectedMode
             })
             document.body.removeChild(overlay)
+        }
+
+        if (!mobile) {
+            saveBtn.onmouseenter = () => {
+                saveBtn.style.transform = 'scale(1.05)'
+                saveBtn.style.boxShadow = `0 4px 16px ${colors.shadow}`
+            }
+            saveBtn.onmouseleave = () => {
+                saveBtn.style.transform = 'scale(1)'
+                saveBtn.style.boxShadow = `0 2px 8px ${colors.shadow}`
+            }
         }
 
         btnContainer.appendChild(cancelBtn)

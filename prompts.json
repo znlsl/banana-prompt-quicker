@@ -56,22 +56,6 @@
         "mode": "generate"
     },
     {
-        "title": "数据大屏",
-        "preview": "https://pbs.twimg.com/media/G6OkTMlacAUcTjm.jpg",
-        "prompt": "你帮我做一个新能源虚拟电厂的数据大屏，我要给领导展示的。",
-        "author": "@canghecode",
-        "link": "https://x.com/canghecode/status/1991618620112400704",
-        "mode": "generate"
-    },
-    {
-        "title": "公众号封面图",
-        "preview": "https://pbs.twimg.com/media/G6OkfijbIAAwgTx.jpg",
-        "prompt": "（未明确提供具体提示词，该案例为模仿阿真封面，直接在lovart中使用Nano Banana Pro生成）",
-        "author": "@canghecode",
-        "link": "https://x.com/canghecode/status/1991618624097038686",
-        "mode": "generate"
-    },
-    {
         "title": "产品原型图",
         "preview": "https://pbs.twimg.com/media/G6Oknc3acAMcKhO.jpg",
         "prompt": "我想开发一款类似于“小宇宙”的APP，请你帮我画个原型图，所有要求均符合APP原型图标准。",
