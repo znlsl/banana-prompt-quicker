@@ -24,9 +24,22 @@
                 "<all_urls>"
             ],
             "js": [
-                "config.js",
-                "prompts.js",
-                "modal.js",
+                "lib/dom.js",
+                "lib/utils.js",
+                "lib/store.js",
+                "services/fetcher.js",
+                "services/config.js",
+                "services/prompts.js",
+                "sites/base.js",
+                "sites/universal.js",
+                "sites/ai_studio.js",
+                "sites/gemini.js",
+                "ui/search.js",
+                "ui/card.js",
+                "ui/announcement.js",
+                "ui/prompt_form.js",
+                "ui/pagination.js",
+                "ui/modal.js",
                 "content.js"
             ],
             "run_at": "document_idle"

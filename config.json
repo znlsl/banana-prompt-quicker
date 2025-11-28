@@ -11,6 +11,10 @@
     },
     "announcements": [
         {
+            "content": "动漫 NSFW 首选 kokorolab!! 欢迎更多垂类生图应用加入",
+            "link": "https://kokorolab.net/zh/home"
+        },
+        {
             "content": "Gemini 审查过于严格，可能无法生成 NSFW，请尝试其他渠道，如 Gemini Enterprise"
         }
     ]
