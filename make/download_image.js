@@ -38,7 +38,7 @@ function downloadFile(url) {
 }
 
 // 使用 macOS sips 命令压缩图片
-function compressImageWithSips(inputPath, outputPath, targetSizeKB = 100) {
+function compressImageWithSips(inputPath, outputPath, targetSizeKB) {
     // sips -s format jpeg -s formatOptions 80 input --out output
     try {
         execSync(`sips -s format jpeg -s formatOptions 80 "${inputPath}" --out "${outputPath}"`, { stdio: 'ignore' });
@@ -122,7 +122,7 @@ async function main() {
 
         // 4. 压缩
         console.log('🗜️  压缩中 (使用 macOS sips)...');
-        compressImageWithSips(tempPath, outputPath, 100);
+        compressImageWithSips(tempPath, outputPath, 200);
 
         // 5. 清理
         fs.unlinkSync(tempPath);
