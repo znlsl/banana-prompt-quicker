@@ -126,6 +126,7 @@ class BananaModal {
             selectedCategory: this.store.state.selectedCategory,
             activeFilters: this.store.state.activeFilters,
             sortMode: this.store.state.sortMode,
+            nsfwEnabled: this.store.state.nsfwEnabled,
             onSearch: (keyword) => {
                 this.store.setSearchKeyword(keyword);
                 this.paginationComponent.resetPage();
@@ -140,6 +141,10 @@ class BananaModal {
             },
             onSortChange: async (mode) => {
                 await this.store.setSortMode(mode);
+                this.paginationComponent.resetPage();
+            },
+            onNsfwChange: async (enabled) => {
+                await this.store.setNsfwEnabled(enabled);
                 this.paginationComponent.resetPage();
             },
             onAddPrompt: () => {

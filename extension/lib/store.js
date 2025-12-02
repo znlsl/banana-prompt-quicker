@@ -9,7 +9,8 @@ class Store {
             sortMode: 'recommend',
             keyword: '',
             categories: new Set(['全部']),
-            randomMap: new Map()
+            randomMap: new Map(),
+            nsfwEnabled: false
         };
         this.listeners = [];
     }
@@ -29,7 +30,8 @@ class Store {
         await Promise.all([
             this.loadPrompts(),
             this.loadFavorites(),
-            this.loadSortMode()
+            this.loadSortMode(),
+            this.loadNsfwSetting()
         ]);
         this.notify();
     }
@@ -43,13 +45,8 @@ class Store {
         this.state.customPrompts = customPrompts;
         this.state.prompts = [...customPrompts, ...staticPrompts];
 
-        // Aggregate categories
-        this.state.categories = new Set(['全部']);
-        this.state.prompts.forEach(p => {
-            if (p.category) {
-                this.state.categories.add(p.category);
-            }
-        });
+        this.updateCategories();
+
 
         this.ensureRandomValues();
     }
@@ -115,6 +112,37 @@ class Store {
         this.notify();
     }
 
+    async loadNsfwSetting() {
+        const result = await chrome.storage.local.get(['banana-nsfw-enabled']);
+        this.state.nsfwEnabled = result['banana-nsfw-enabled'] || false;
+    }
+
+    async setNsfwEnabled(enabled) {
+        this.state.nsfwEnabled = enabled;
+        await chrome.storage.local.set({ 'banana-nsfw-enabled': enabled });
+
+        // If disabling NSFW and current category is NSFW, switch to 'all'
+        if (!enabled && this.state.selectedCategory === 'NSFW') {
+            this.state.selectedCategory = 'all';
+        }
+
+        this.updateCategories();
+        this.notify();
+    }
+
+    updateCategories() {
+        this.state.categories = new Set(['全部']);
+        this.state.prompts.forEach(p => {
+            if (p.category) {
+                // Skip NSFW category if disabled
+                if (!this.state.nsfwEnabled && p.category === 'NSFW') {
+                    return;
+                }
+                this.state.categories.add(p.category);
+            }
+        });
+    }
+
     ensureRandomValues() {
         this.state.prompts.forEach(p => {
             const key = `${p.title}-${p.author}`;
@@ -141,7 +169,7 @@ class Store {
     }
 
     getFilteredPrompts() {
-        const { prompts, keyword, selectedCategory, activeFilters, favorites, sortMode } = this.state;
+        const { prompts, keyword, selectedCategory, activeFilters, favorites, sortMode, nsfwEnabled } = this.state;
 
         const FLASH_MODE_PROMPT = {
             title: "灵光模式",
@@ -169,6 +197,11 @@ OK，我想要：`,
             if (!matchesSearch) return false;
 
             if (selectedCategory !== 'all' && prompt.category !== selectedCategory) {
+                return false;
+            }
+
+            // Filter NSFW content if disabled
+            if (!nsfwEnabled && prompt.category === 'NSFW') {
                 return false;
             }
 

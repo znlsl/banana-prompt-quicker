@@ -10,6 +10,7 @@
                 selectedCategory: props.selectedCategory || 'all',
                 activeFilters: props.activeFilters || new Set(),
                 sortMode: props.sortMode || 'recommend',
+                nsfwEnabled: props.nsfwEnabled || false,
                 isDropdownOpen: false
             };
             this.element = null;
@@ -53,6 +54,15 @@
 
                 const tooltip = this.element.querySelector('#sort-tooltip');
                 if (tooltip) tooltip.textContent = `切换${currentModeText}`;
+            }
+
+            // Update NSFW Toggle
+            const nsfwBtn = this.element.querySelector('#nsfw-toggle-btn');
+            if (nsfwBtn) {
+                const isEnabled = this.state.nsfwEnabled;
+                nsfwBtn.style.background = isEnabled ? this.props.colors.error : 'transparent';
+                nsfwBtn.style.color = isEnabled ? 'white' : this.props.colors.textSecondary;
+                nsfwBtn.style.borderColor = isEnabled ? this.props.colors.error : this.props.colors.border;
             }
 
             // Update Category Dropdown
@@ -302,6 +312,38 @@
                 }
             }, '+');
             buttonsContainer.appendChild(addBtn);
+
+            // NSFW Toggle
+            const nsfwBtn = h('button', {
+                id: 'nsfw-toggle-btn',
+                title: '显示/隐藏 NSFW 内容',
+                style: `padding: ${isMobile ? '10px' : '8px'}; border: 1px solid ${colors.border}; border-radius: 8px; background: transparent; color: ${colors.textSecondary}; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; margin-left: 8px;`,
+                innerHTML: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`,
+                onclick: () => {
+                    const newValue = !this.state.nsfwEnabled;
+                    this.updateState({ nsfwEnabled: newValue });
+                    if (this.props.onNsfwChange) this.props.onNsfwChange(newValue);
+                },
+                onmouseenter: !isMobile ? (e) => {
+                    if (!this.state.nsfwEnabled) {
+                        e.currentTarget.style.color = colors.error;
+                        e.currentTarget.style.borderColor = colors.error;
+                        e.currentTarget.style.background = `${colors.error}10`;
+                    }
+                } : null,
+                onmouseleave: !isMobile ? (e) => {
+                    if (!this.state.nsfwEnabled) {
+                        e.currentTarget.style.color = colors.textSecondary;
+                        e.currentTarget.style.borderColor = colors.border;
+                        e.currentTarget.style.background = 'transparent';
+                    }
+                } : null
+            });
+
+            // Add NSFW button to search container instead of filter container for better layout
+            // searchContainer.appendChild(nsfwBtn); 
+            // Actually, let's put it next to the sort button
+            sortBtnContainer.appendChild(nsfwBtn);
 
             const filterContainer = h('div', {
                 style: `display: flex; gap: 8px; align-items: center; ${isMobile ? 'justify-content: space-between; flex-wrap: wrap;' : ''}; position: relative; z-index: 101;`
