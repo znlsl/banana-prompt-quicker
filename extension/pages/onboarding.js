@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // const btnSkip = document.getElementById('btn-skip');
 
     let currentSlide = 0;
-    const totalSlides = 3;
+    const totalSlides = 2;
 
     function updateSlide(index) {
         currentSlide = index;
