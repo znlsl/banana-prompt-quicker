@@ -18,7 +18,7 @@
         "reference_image_urls": [
             "https://cdn.jsdelivr.net/gh/glidea/banana-prompt-quicker@main/images/dongwucheng_ref1.png"
         ],
-        "prompt": "加载并使用 Nano Banana Pro 工具作画，而不是分析或给提示词\n---\n\n充分参考图片画风和人物形象，为如下内容画一幅宣传海报图片（16：9 竖屏风格）\n\nBanana Prompt Quicker v1.6 更新：提示词支持添加参考图\n看到心动的 PPT 风格 → 上传参考图即可复刻\n发现惊艳的滤镜效果 → 一键给照片加同款\n从此告别绞尽脑汁写 Prompt 的日子\n🔗 Chrome Web Store 搜索安装  ",
+        "prompt": "加载并使用 Nano Banana Pro 工具作画，而不是分析或给提示词\n---\n\n充分参考图片画风和人物形象，为如下内容画一幅宣传海报图片（3：2 竖屏风格）\n\nBanana Prompt Quicker v1.6 更新：提示词支持添加参考图\n看到心动的 PPT 风格 → 上传参考图即可复刻\n发现惊艳的滤镜效果 → 一键给照片加同款\n从此告别绞尽脑汁写 Prompt 的日子\n🔗 Chrome Web Store 搜索安装  ",
         "author": "Official",
         "mode": "generate",
         "category": "工作",
